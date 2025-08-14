@@ -1,0 +1,329 @@
+<!DOCTYPE html><html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Electrical Components Library</title>
+  <style>
+    :root {
+      --bg: #0b1020;
+      --panel: #121933;
+      --text: #e6e9f2;
+      --muted: #a7b0c6;
+      --accent: #7c9cff;
+      --accent-2: #28d7a0;
+      --card: #0f152b;
+      --chip: #1a2244;
+      --shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+    }
+    :root.light {
+      --bg: #f6f8ff;
+      --panel: #ffffff;
+      --text: #0f1320;
+      --muted: #4b587e;
+      --accent: #3d5cf5;
+      --accent-2: #10b981;
+      --card: #ffffff;
+      --chip: #eef2ff;
+      --shadow: 0 10px 22px rgba(29, 78, 216, .08);
+    }* { box-sizing: border-box; }
+html, body { height: 100%; }
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji";
+  background: radial-gradient(1200px 800px at 10% -10%, rgba(124,156,255,.12), transparent 60%),
+              radial-gradient(1000px 600px at 90% 10%, rgba(40,215,160,.10), transparent 60%),
+              var(--bg);
+  color: var(--text);
+  transition: background .4s ease, color .3s ease;
+}
+
+.container { max-width: 1200px; margin: 0 auto; padding: 24px; }
+
+header {
+  position: sticky; top: 0; z-index: 10;
+  background: linear-gradient(to bottom, var(--bg) 60%, transparent);
+  backdrop-filter: blur(6px);
+}
+
+.toolbar {
+  display: grid; gap: 12px; grid-template-columns: 1fr auto auto auto; align-items: center;
+  background: var(--panel);
+  border: 1px solid rgba(255,255,255,.06);
+  padding: 14px; border-radius: 18px; box-shadow: var(--shadow);
+}
+
+.title { font-weight: 800; letter-spacing: .2px; font-size: clamp(18px, 2vw, 22px); }
+
+.search {
+  grid-column: 1 / -1; display: flex; gap: 10px; align-items: center; background: var(--card);
+  border: 1px solid rgba(255,255,255,.08); padding: 10px 12px; border-radius: 14px;
+  transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
+}
+.search:focus-within { transform: translateY(-1px); box-shadow: 0 10px 26px rgba(0,0,0,.25); border-color: rgba(124,156,255,.35); }
+.search input { flex: 1; border: 0; outline: 0; padding: 8px; background: transparent; color: var(--text); font-size: 16px; }
+.search button { border: 0; padding: 10px 14px; border-radius: 10px; background: var(--accent); color: #fff; cursor: pointer; font-weight: 600; transition: transform .15s ease, filter .2s ease; }
+.search button:active { transform: scale(.98); }
+
+.chipbar { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
+.chip {
+  border: 1px solid rgba(255,255,255,.08);
+  background: var(--chip); color: var(--text);
+  padding: 8px 12px; border-radius: 999px; font-size: 13px; cursor: pointer; user-select: none;
+  transition: background .2s ease, transform .15s ease, border-color .2s ease, color .2s ease;
+}
+.chip:hover { transform: translateY(-1px); }
+.chip.active { background: linear-gradient(135deg, var(--accent) 0%, var(--accent-2) 100%); color: #fff; border-color: transparent; }
+
+.toggles { display: flex; gap: 10px; }
+.toggle {
+  display: inline-flex; align-items: center; gap: 8px; border: 1px solid rgba(255,255,255,.08);
+  background: var(--card); padding: 8px 12px; border-radius: 12px; cursor: pointer; font-weight: 600;
+  transition: transform .15s ease, border-color .2s ease;
+}
+.toggle:active { transform: scale(.98); }
+
+.grid-controls { display: flex; gap: 8px; }
+.viewbtn {
+  border: 1px solid rgba(255,255,255,.08); background: var(--card); color: var(--text);
+  padding: 8px 10px; border-radius: 10px; cursor: pointer; font-weight: 700; width: 40px; text-align: center;
+  transition: transform .15s ease, background .2s ease;
+}
+.viewbtn.active { background: var(--accent); color: #fff; }
+
+.grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; margin-top: 18px; }
+@media (max-width: 1100px) { .grid { grid-template-columns: repeat(3,1fr);} }
+@media (max-width: 800px) { .grid { grid-template-columns: repeat(2,1fr);} }
+@media (max-width: 540px) { .grid { grid-template-columns: 1fr; } }
+
+.card {
+  position: relative; overflow: hidden; border-radius: 16px; background: var(--card);
+  border: 1px solid rgba(255,255,255,.08); box-shadow: var(--shadow);
+  transition: transform .18s ease, box-shadow .25s ease, opacity .25s ease, filter .25s ease;
+  will-change: transform, opacity, filter;
+}
+.card.hide { opacity: 0; transform: translateY(8px) scale(.98); filter: blur(1px); pointer-events: none; }
+.thumb { aspect-ratio: 16/10; width: 100%; object-fit: cover; display: block; }
+.body { padding: 12px 14px 16px; }
+.badge { display: inline-block; font-size: 11px; padding: 6px 10px; border-radius: 999px; background: rgba(124,156,255,.15); color: var(--accent); font-weight: 700; letter-spacing: .3px; }
+.name { margin: 10px 0 4px; font-size: 18px; font-weight: 800; }
+.desc { margin: 0 0 10px; font-size: 14px; color: var(--muted); line-height: 1.45; }
+
+.meta { display: flex; gap: 8px; align-items: center; justify-content: space-between; }
+.source {
+  font-size: 12px; text-decoration: none; color: var(--accent); font-weight: 700;
+  border-bottom: 1px dashed currentColor; transition: opacity .2s ease, filter .2s ease; opacity: .9;
+}
+.source:hover { opacity: 1; filter: brightness(1.1); }
+
+.footer { text-align: center; color: var(--muted); margin: 26px 0 10px; font-size: 12px; }
+
+/* List view */
+.grid.list .card { display: grid; grid-template-columns: 220px 1fr; }
+.grid.list .thumb { height: 100%; aspect-ratio: auto; }
+@media (max-width: 700px) { .grid.list .card { grid-template-columns: 1fr; } .grid.list .thumb { aspect-ratio: 16/10; } }
+
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="toolbar">
+        <div class="title">⚡ Electrical Components Library</div>
+        <div class="toggles">
+          <button id="themeToggle" class="toggle" title="Toggle light/dark">🌓 Theme</button>
+        </div>
+        <div class="grid-controls" title="Toggle card layout">
+          <button id="gridBtn" class="viewbtn active">▦</button>
+          <button id="listBtn" class="viewbtn">≣</button>
+        </div>
+        <div></div><form class="search" id="searchForm" onsubmit="event.preventDefault();">
+      <input id="searchInput" type="search" placeholder="Search components or functions… (e.g., resistor, power, protection)" aria-label="Search" />
+      <button type="reset" id="clearBtn" title="Clear search">Clear</button>
+      <button type="button" id="searchBtn" title="Run search">Search</button>
+    </form>
+
+    <div class="chipbar" id="chipbar" aria-label="Filter by function group">
+      <span class="chip active" data-filter="all">All</span>
+      <span class="chip" data-filter="Power Supply">Power Supply</span>
+      <span class="chip" data-filter="Passive">Passive</span>
+      <span class="chip" data-filter="Active">Active</span>
+      <span class="chip" data-filter="Control & Protection">Control & Protection</span>
+      <span class="chip" data-filter="Electromechanical">Electromechanical</span>
+      <span class="chip" data-filter="Measurement & Indicators">Measurement & Indicators</span>
+      <span class="chip" data-filter="Connectors">Connectors</span>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section id="grid" class="grid" aria-live="polite"></section>
+  <p class="footer">Tip: combine the chips and search to quickly narrow down parts. Smooth transitions keep context as you filter.</p>
+</main>
+
+  </div>  <script>
+    // --- Data: components ---
+    const components = [
+      // Power Supply
+      { name: 'Battery', group: 'Power Supply', img: 'https://assets.technologynetworks.com/production/dynamic/images/content/376993/understanding-battery-types-components-and-the-role-of-battery-material-testing-in-development-and-376993-960x540.jpg?cb=12839931', source: 'https://en.wikipedia.org/wiki/Battery_(electricity)', desc: 'Stores chemical energy and converts it into DC electrical energy.' },
+      { name: 'Power Supply Unit (PSU)', group: 'Power Supply', img: 'https://media.istockphoto.com/id/1250266807/photo/computer-power-supply-unit.jpg?s=612x612&w=0&k=20&c=xVrAeYP4tAfTR4L24YSYApycicFpUoHLKFdWqZRtSh0=', source: 'https://en.wikipedia.org/wiki/Power_supply', desc: 'Converts AC mains to regulated DC voltages for circuits.' },
+      { name: 'Generator', group: 'Power Supply', img: 'https://upload.wikimedia.org/wikipedia/commons/4/4f/Modern_Steam_Turbine_Generator.jpg', source: 'https://en.wikipedia.org/wiki/Electrical_generator', desc: 'Converts mechanical energy into electrical energy (usually AC).' },
+      { name: 'Transformer', group: 'Power Supply', img: 'https://eepower.com/uploads/articles/visualizing-transformer-behavior-drawing-phasor-diagrams-and-equivalent-circuits-fig0.jpg', source: 'https://en.wikipedia.org/wiki/Transformer', desc: 'Transfers power between circuits by electromagnetic induction; steps voltage up or down.' },
+
+      // Passive
+      { name: 'Resistor', group: 'Passive', img: 'https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjxB6cCy_OZ-xzVpRINDKwPF8zdP9mUyEeHxfekGz4m3tS65LQhmv1rXKRJuWLjh-G9aR-_1yYtliLFLBoho_sZBP6hwAB1beW5Yu4nOPlhH2zxmzzWFECuH2rcGUy4Kj5bWoKqW91Ak5g/w1600/what-is-resistor.webp', source: 'https://en.wikipedia.org/wiki/Resistor', desc: 'Opposes current flow to set voltages/currents and limit power.' },
+      { name: 'Capacitor', group: 'Passive', img: 'https://www.flyrobo.in/image/cache/wp/gj/3300uf-25v-electrolytic-capacitor/3300uf-25v-electrolytic-capacitor-550x550w.webp', source: 'https://en.wikipedia.org/wiki/Capacitor', desc: 'Stores electrical energy in an electric field; filters and times signals.' },
+      { name: 'Inductor', group: 'Passive', img: 'https://www.iqsdirectory.com/articles/electric-coil/inductors-and-inductor-coils/inductor.jpg', source: 'https://en.wikipedia.org/wiki/Inductor', desc: 'Stores energy in a magnetic field; resists changes in current.' },
+      { name: 'Potentiometer', group: 'Passive', img: 'https://quartzcomponents.com/cdn/shop/products/10K-Ohm-Potentiometer_6f584c48-f563-41bc-9b3c-9a6e6069a6d2_1200x1200.jpg?v=1702986264', source: 'https://en.wikipedia.org/wiki/Potentiometer', desc: 'Adjustable resistor used for tuning and user controls.' },
+
+      // Active
+      { name: 'Diode', group: 'Active', img: 'https://static.blikai.com/prod/20240706_0_webp/what_is_a_diode.webp', source: 'https://en.wikipedia.org/wiki/Diode', desc: 'Allows current in one direction; used for rectification and protection.' },
+      { name: 'Light Emitting Diode (LED)', group: 'Active', img: 'https://m.media-amazon.com/images/I/614siCn2N-L._UF350,350_QL80_.jpg', source: 'https://en.wikipedia.org/wiki/Light-emitting_diode', desc: 'Semiconductor that emits light when forward biased.' },
+      { name: 'Transistor (BJT/MOSFET)', group: 'Active', img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS9Mixf1CdY55A_0CxV55MihhVVwUNaTRhqQQ&s', source: 'https://en.wikipedia.org/wiki/Transistor', desc: 'Amplifies or switches electronic signals and power.' },
+      { name: 'Operational Amplifier (Op-Amp)', group: 'Active', img: 'https://cdn.prod.website-files.com/5d9b70c4eaeaabb464549984/60eca2d03e1b1408826871d7_274_Top%20Amplifiersblog274_feature.webp', source: 'https://en.wikipedia.org/wiki/Operational_amplifier', desc: 'High-gain differential amplifier used for signal conditioning and control.' },
+
+      // Control & Protection
+      { name: 'Fuse', group: 'Control & Protection', img: 'https://caas.phoenixcontact.com/caas/v1/stable/media/269134/full/b1500?format=jpg', source: 'https://en.wikipedia.org/wiki/Fuse_(electrical)', desc: 'Sacrificial device that opens a circuit when current exceeds a threshold.' },
+      { name: 'Circuit Breaker', group: 'Control & Protection', img: 'https://images.cdn-files-a.com/uploads/2711912/800_660813907f1fc.jpg', source: 'https://en.wikipedia.org/wiki/Circuit_breaker', desc: 'Automatically interrupts excessive current; can be reset.' },
+      { name: 'MOV/Varistor', group: 'Control & Protection', img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/bd/Varistor_S14K385_photo.jpg/1200px-Varistor_S14K385_photo.jpg', source: 'https://en.wikipedia.org/wiki/Varistor', desc: 'Voltage-dependent resistor for surge suppression.' },
+      { name: 'Switch', group: 'Control & Protection', img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRraYXFVtf3IOu1bpZ_OZp4eJEoZoWIDG-ISTrDAWkxhy8O42wKjKpwJbfD4KUX4lAVU_A&usqp=CAU', source: 'https://en.wikipedia.org/wiki/Switch', desc: 'Manually makes or breaks a connection to control circuits.' },
+
+      // Electromechanical
+      { name: 'Relay', group: 'Electromechanical', img: 'https://witblox.com/cdn/shop/files/1ch_relay_module_5v_labeled.jpg?v=1719221123&width=1445', source: 'https://en.wikipedia.org/wiki/Relay', desc: 'Electrically controlled switch; isolates and controls high power with a low-power signal.' },
+      { name: 'DC Motor', group: 'Electromechanical', img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ-NRawDgK6jDima2cohKyhl7MJvtF6YPXhuw&s', source: 'https://en.wikipedia.org/wiki/Electric_motor', desc: 'Converts electrical energy into mechanical rotation.' },
+      { name: 'Solenoid', group: 'Electromechanical', img: 'https://www.moog.com/content/dam/sites/moog/images/Products/Solenoids/623801-linear-solenoid-grey-bkgrd.jpg', source: 'https://en.wikipedia.org/wiki/Solenoid', desc: 'Coil that produces linear motion when energized.' },
+
+      // Measurement & Indicators
+      { name: 'Buzzer', group: 'Measurement & Indicators', img: 'https://images.thingbits.net/eyJidWNrZXQiOiJ0aGluZ2JpdHMtbmV0Iiwia2V5IjoiNzFoYmVocHJvaG5lMGQyY25qNWt0a250d2RnbCIsImVkaXRzIjp7InJlc2l6ZSI6eyJ3aWR0aCI6OTcwLCJoZWlnaHQiOjcyOCwiZml0IjoiY292ZXIifX19', source: 'https://en.wikipedia.org/wiki/Buzzer', desc: 'Audio indicator used for alarms and feedback.' },
+      { name: 'Seven-Segment Display', group: 'Measurement & Indicators', img: 'https://asianelectronics.co.in/wp-content/uploads/2021/03/WhatsApp-Image-2023-11-24-at-5.27.47-PM.jpeg', source: 'https://en.wikipedia.org/wiki/Seven-segment_display', desc: 'Numeric display built from LED segments.' },
+      { name: 'LCD Module', group: 'Measurement & Indicators', img: 'https://vishaworld.com/cdn/shop/products/1.8InchTFTLCDModule128x160with4IO1.jpg?v=1676110993', source: 'https://en.wikipedia.org/wiki/Liquid-crystal_display', desc: 'Low-power alphanumeric/graphical display.' },
+
+      // Connectors
+      { name: 'Terminal Block', group: 'Connectors', img: 'https://www.connectwell.com/ImageGen.ashx?image=/media/51073369/imagegen-1.gif&width=100%&compression=95&Transparent=true&BgColor=C0C0C0&constrain=true&altimage=/media/No-Image-icon.png', source: 'https://en.wikipedia.org/wiki/Terminal_block', desc: 'Screw or spring terminals to join wires safely.' },
+      { name: 'Header Pins', group: 'Connectors', img: 'https://upload.wikimedia.org/wikipedia/commons/b/bf/6_Pin_Header.jpg', source: 'https://en.wikipedia.org/wiki/Pin_header', desc: 'Male/female pin strips for board-to-board or cable connections.' },
+    ];
+
+    // --- DOM helpers ---
+    const $grid = document.getElementById('grid');
+    const $chips = document.querySelectorAll('.chip');
+    const $searchInput = document.getElementById('searchInput');
+    const $searchBtn = document.getElementById('searchBtn');
+    const $clearBtn = document.getElementById('clearBtn');
+    const $themeToggle = document.getElementById('themeToggle');
+    const $gridBtn = document.getElementById('gridBtn');
+    const $listBtn = document.getElementById('listBtn');
+
+    // --- Build cards ---
+    function buildCard(item) {
+      const card = document.createElement('article');
+      card.className = 'card';
+      card.dataset.group = item.group.toLowerCase();
+      card.dataset.name = item.name.toLowerCase();
+      card.dataset.desc = item.desc.toLowerCase();
+      card.innerHTML = `
+        <img class="thumb" src="${item.img}" alt="${item.name}" loading="lazy" />
+        <div class="body">
+          <span class="badge">${item.group}</span>
+          <h3 class="name">${item.name}</h3>
+          <p class="desc">${item.desc}</p>
+          <div class="meta">
+            <a class="source" href="${item.source}" target="_blank" rel="noopener noreferrer">Image / Info source</a>
+            <span style="font-size:12px;color:var(--muted)">#${item.name.replace(/[^a-z0-9]/gi,'')}</span>
+          </div>
+        </div>
+      `;
+      return card;
+    }
+
+    function renderGrid(list) {
+      $grid.innerHTML = '';
+      requestAnimationFrame(() => {
+        list.forEach(item => $grid.appendChild(buildCard(item)));
+      });
+    }
+
+    // --- Filtering logic ---
+    let activeFilter = 'all';
+
+    function applyFilters() {
+      const q = $searchInput.value.trim().toLowerCase();
+      const cards = Array.from($grid.children);
+      cards.forEach(card => {
+        const inGroup = activeFilter === 'all' || card.dataset.group === activeFilter.toLowerCase();
+        const text = (card.dataset.name + ' ' + card.dataset.group + ' ' + card.dataset.desc);
+        const match = !q || text.includes(q);
+        const show = inGroup && match;
+        if (show) {
+          card.classList.remove('hide');
+        } else {
+          card.classList.add('hide');
+        }
+      });
+    }
+
+    // --- Chip events ---
+    $chips.forEach(chip => {
+      chip.addEventListener('click', () => {
+        $chips.forEach(c => c.classList.remove('active'));
+        chip.classList.add('active');
+        activeFilter = chip.dataset.filter;
+        applyFilters();
+      });
+    });
+
+    // --- Search events ---
+    $searchBtn.addEventListener('click', applyFilters);
+    $searchInput.addEventListener('input', () => {
+      // smooth live search; debounce-like via requestAnimationFrame
+      window.requestAnimationFrame(applyFilters);
+    });
+    $clearBtn.addEventListener('click', () => {
+      $searchInput.value = '';
+      applyFilters();
+    });
+
+    // --- Theme toggle with persistence ---
+    function setTheme(mode) {
+      const root = document.documentElement;
+      if (mode === 'light') root.classList.add('light');
+      else root.classList.remove('light');
+      localStorage.setItem('ec-theme', mode);
+    }
+
+    $themeToggle.addEventListener('click', () => {
+      const isLight = document.documentElement.classList.toggle('light');
+      localStorage.setItem('ec-theme', isLight ? 'light' : 'dark');
+    });
+
+    (function initTheme() {
+      const saved = localStorage.getItem('ec-theme');
+      if (saved === 'light') document.documentElement.classList.add('light');
+    })();
+
+    // --- View (grid/list) toggle ---
+    function setView(type) {
+      if (type === 'list') {
+        $grid.classList.add('list');
+        $listBtn.classList.add('active');
+        $gridBtn.classList.remove('active');
+      } else {
+        $grid.classList.remove('list');
+        $gridBtn.classList.add('active');
+        $listBtn.classList.remove('active');
+      }
+      localStorage.setItem('ec-view', type);
+    }
+
+    $gridBtn.addEventListener('click', () => setView('grid'));
+    $listBtn.addEventListener('click', () => setView('list'));
+
+    (function initView() {
+      const v = localStorage.getItem('ec-view');
+      setView(v === 'list' ? 'list' : 'grid');
+    })();
+
+    // --- Kickoff ---
+    renderGrid(components);
+    // apply an initial tiny delay so the entrance feels smooth
+    setTimeout(applyFilters, 30);
+  </script></body>
+</html>
